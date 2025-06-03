@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Portal | SkyWings Airlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #9b59b6;
+            --secondary: #8e44ad;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            position: relative;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-title {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .username {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .menu a i {
+            margin-right: 8px;
+        }
+        
+        .menu a.logout {
+            background: rgba(231, 76, 60, 0.2);
+        }
+        
+        .menu a.logout:hover {
+            background: rgba(231, 76, 60, 0.4);
+        }
+        
+        .section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.3);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .flight-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .flight-table thead {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+        
+        .flight-table th {
+            padding: 1rem;
+            text-align: left;
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .flight-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        
+        .flight-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .flight-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status.on-time {
+            background-color: var(--success);
+        }
+        
+        .status.delayed {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .status.cancelled {
+            background-color: var(--danger);
+        }
+        
+        .status.boarding {
+            background-color: var(--primary);
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+        
+        .card .amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card .period {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .error {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--danger);
+            grid-column: 1 / -1;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .menu a {
+                justify-content: center;
+            }
+            
+            .flight-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-title">
+            <h2>Agent Portal</h2>
+            <div class="username">Welcome back, {{ session['username'] }}</div>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <div class="menu">
+            <a href="#agent-flights"><i class="fas fa-plane"></i> My Flights</a>
+            <a href="#search-purchase"><i class="fas fa-ticket-alt"></i> Search/Purchase</a>
+            <a href="#commission"><i class="fas fa-money-bill-wave"></i> My Commission</a>
+            <a href="#top-customers"><i class="fas fa-star"></i> Top Customers</a>
+            <a href="/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+                <!-- Error and Success Messages -->
+        {% if error %}
+            <div class="message error">
+                <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <div class="message success">
+                <i class="fas fa-check-circle"></i> <strong>Success:</strong> {{ message }}
+            </div>
+        {% endfor %}
+        <!-- My Flights Section -->
+        <div id="agent-flights" class="section">
+            <h2><i class="fas fa-plane"></i> My Booked Flights</h2>
+            
+            <form class="filter-form" method="GET" action="/home_BookingAgent">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" name="start_date">
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" name="end_date">
+                </div>
+                <div class="form-group">
+                    <label>Departure Airport</label>
+                    <input type="text" name="departure_airport" placeholder="e.g., JFK">
+                </div>
+                <div class="form-group">
+                    <label>Arrival Airport</label>
+                    <input type="text" name="arrival_airport" placeholder="e.g., LAX">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filter Flights
+                    </button>
+                </div>
+
+            </form>
+            
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Airline</th>
+                            <th>Flight No.</th>
+                            <th>Departure</th>
+                            <th>Departure Time</th>
+                            <th>Arrival</th>
+                            <th>Customer Email</th>
+                            <th>Ticket ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flight in flights %}
+                        <tr>
+                            <td>{{flight[0]}}</td>
+                            <td>{{flight[1]}}</td>
+                            <td>{{flight[2]}}</td>
+                            <td>{{flight[3]}}</td>
+                            <td>{{flight[4]}}</td>
+                            <td>{{flight[9]}}</td>
+                            <td>{{flight[8]}}</td>
+                            <td>
+                                <span class="status 
+                                    {% if flight[7] == 'On Time' %}on-time
+                                    {% elif flight[7] == 'Delayed' %}delayed
+                                    {% elif flight[7] == 'Cancelled' %}cancelled
+                                    {% elif flight[7] == 'Boarding' %}boarding
+                                    {% endif %}">
+                                    {{flight[7]}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Search and Purchase Section -->
+        <div id="search-purchase" class="section">
+            <h2><i class="fas fa-search"></i> Search & Purchase Flights</h2>
+            
+            <form class="filter-form" method="GET" action="/home_BookingAgent_Search">
+                <div class="form-group">
+                    <label>Departure Airport</label>
+                    <input type="text" name="departure_airport" placeholder="e.g., JFK">
+                </div>
+                <div class="form-group">
+                    <label>Arrival Airport</label>
+                    <input type="text" name="arrival_airport" placeholder="e.g., LAX">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="date">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search Flights
+                    </button>
+                </div>
+
+            </form>
+            
+            <form method="POST" action="/home_BookingAgent_Purchase">
+                <div style="overflow-x: auto;">
+                    <table class="flight-table">
+                        <thead>
+                            <tr>
+                                <th>Airline</th>
+                                <th>Flight No.</th>
+                                <th>Departure</th>
+                                <th>Departure Time</th>
+                                <th>Arrival</th>
+                                <th>Status</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for flight in flights2 %}
+                            <tr>
+                                <td>{{flight[0]}}</td>
+                                <td>{{flight[1]}}</td>
+                                <td>{{flight[2]}}</td>
+                                <td>{{flight[3]}}</td>
+                                <td>{{flight[4]}}</td>
+                                <td>
+                                    <span class="status 
+                                        {% if flight[7] == 'On Time' %}on-time
+                                        {% elif flight[7] == 'Delayed' %}delayed
+                                        {% elif flight[7] == 'Cancelled' %}cancelled
+                                        {% elif flight[7] == 'Boarding' %}boarding
+                                        {% endif %}">
+                                        {{flight[7]}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <input type="radio" name="selected_flight" value="{{ flight[0] }}_{{ flight[1] }}">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label>Customer Email</label>
+                    <input type="email" name="customer_email" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-shopping-cart"></i> Purchase Ticket
+                </button>
+                
+
+            </form>
+        </div>
+        
+        <!-- Commission Section -->
+        <div id="commission" class="section">
+            <h2><i class="fas fa-money-bill-wave"></i> My Commission</h2>
+            
+            <form class="filter-form" method="GET" action="/home_BookingAgent_Commission">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" name="start_date">
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" name="end_date">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </form>
+            
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>Total Commission</h3>
+                    <div class="amount">${{ "%.2f"|format(total_commission or 0) }}</div>
+                    <div class="period">
+                        {% if start_date and end_date %}
+                            {{ start_date|datetimeformat('%b %d, %Y') }} to {{ end_date|datetimeformat('%b %d, %Y') }}
+                        {% else %}
+                            Last 30 Days
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Avg per Ticket</h3>
+                    <div class="amount">${{ "%.2f"|format(avg_commission or 0) }}</div>
+                </div>
+                
+                <div class="card">
+                    <h3>Tickets Sold</h3>
+                    <div class="amount">{{ ticket_count or 0 }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Customers Section -->
+        <div id="top-customers" class="section">
+            <h2><i class="fas fa-star"></i> Top Customers</h2>
+            
+            <form method="GET" action="/home_BookingAgent_Top">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+            </form>
+            
+            <div class="chart-container">
+                <h3>Top 5 by Tickets Bought</h3>
+                <canvas id="ticketsChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Top 5 by Commission</h3>
+                <canvas id="commissionChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript"> 
+        const ticketLabels = {{ top_customers_tickets | map(attribute='email') | list | tojson | safe }};
+        const ticketData = {{ top_customers_tickets | map(attribute='ticket_count') | list | tojson | safe }};
+        const commissionLabels = {{ top_customers_commission | map(attribute='email') | list | tojson | safe }};
+        const commissionData = {{ top_customers_commission | map(attribute='total_commission') | list | tojson | safe }};
+        
+        new Chart(document.getElementById('ticketsChart'), {
+            type: 'bar',
+            data: {
+                labels: ticketLabels,
+                datasets: [{
+                    label: 'Tickets Bought (Last 6 Months)',
+                    data: ticketData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                responsive: true, 
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    }
+                }
+            }
+        });
+       
+        new Chart(document.getElementById('commissionChart'), {
+            type: 'bar',
+            data: {
+                labels: commissionLabels,
+                datasets: [{
+                    label: 'Commission Earned ($) (Last Year)',
+                    data: commissionData,
+                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                responsive: true, 
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

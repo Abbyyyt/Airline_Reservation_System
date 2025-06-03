@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard | SkyWings Airlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --sky: #1abc9c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            position: relative;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .welcome-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .staff-info {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-accent {
+            background: linear-gradient(45deg, var(--accent), #e67e22);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .flight-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .flight-table thead {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+        
+        .flight-table th {
+            padding: 1rem;
+            text-align: left;
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .flight-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        
+        .flight-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .flight-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status.on-time {
+            background-color: var(--success);
+        }
+        
+        .status.delayed {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .status.cancelled {
+            background-color: var(--danger);
+        }
+        
+        .status.boarding {
+            background-color: var(--primary);
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            color: var(--accent);
+        }
+        
+        .logout-btn i {
+            margin-right: 8px;
+        }
+        
+        .flight-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fly 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px) translateY(50px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-100px) rotate(5deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .flight-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated flight icons -->
+    <i class="fas fa-plane flight-icon" style="top: 15%; left: 0; animation-delay: 0s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 35%; left: 0; animation-delay: 3s; animation-duration: 20s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 65%; left: 0; animation-delay: 7s; animation-duration: 25s;"></i>
+    
+    <div class="container">
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <h1>Staff Dashboard</h1>
+            <div class="staff-info">Welcome, {{ username }} ({{ airline_name }})</div>
+        </div>
+
+        <!-- Error and Success Messages -->
+        {% if error %}
+            <div class="message error">
+                <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <div class="message success">
+                <i class="fas fa-check-circle"></i> <strong>Success:</strong> {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- View Flights Section -->
+        <div class="section">
+            <h2><i class="fas fa-plane-departure"></i> Flight Management</h2>
+            
+            <form class="filter-form" action="/staff_view_flights" method="POST">
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" value="{{ start_date }}">
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" name="end_date" value="{{ end_date }}">
+                </div>
+                <div class="form-group">
+                    <label>Departure Airport</label>
+                    <select name="departure_airport">
+                        <option value="">Any</option>
+                        {% for airport in airports %}
+                        <option value="{{ airport.airport_name }}" {% if departure_airport == airport.airport_name %}selected{% endif %}>
+                            {{ airport.airport_name }} ({{ airport.airport_city }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Arrival Airport</label>
+                    <select name="arrival_airport">
+                        <option value="">Any</option>
+                        {% for airport in airports %}
+                        <option value="{{ airport.airport_name }}" {% if arrival_airport == airport.airport_name %}selected{% endif %}>
+                            {{ airport.airport_name }} ({{ airport.airport_city }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filter Flights
+                    </button>
+                </div>
+            </form>
+
+            {% if flights %}
+            <h3>Flights for {{ airline_name }} (Default: Next 30 Days)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Airline</th>
+                            <th>Flight No.</th>
+                            <th>Departure</th>
+                            <th>Departure Time</th>
+                            <th>Arrival</th>
+                            <th>Arrival Time</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flight in flights %}
+                        <tr>
+                            <td>{{ flight.airline_name }}</td>
+                            <td>{{ flight.flight_num }}</td>
+                            <td>{{ flight.departure_airport }}</td>
+                            <td>{{ flight.departure_time | datetimeformat('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ flight.arrival_airport }}</td>
+                            <td>{{ flight.arrival_time | datetimeformat('%Y-%m-%d %H:%M') }}</td>
+                            <td>${{ flight.price }}</td>
+                            <td>
+                                <span class="status 
+                                    {% if flight.status == 'On Time' %}on-time
+                                    {% elif flight.status == 'Delayed' %}delayed
+                                    {% elif flight.status == 'Cancelled' %}cancelled
+                                    {% elif flight.status == 'Boarding' %}boarding
+                                    {% endif %}">
+                                    {{ flight.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <form action="/staff_view_flights" method="POST">
+                                    <input type="hidden" name="flight_num" value="{{ flight.flight_num }}">
+                                    <button type="submit" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                                        <i class="fas fa-users"></i> Passengers
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if passengers %}
+            <h3>Passengers for Flight {{ flight_num }}</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Customer Email</th>
+                            <th>Customer Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for passenger in passengers %}
+                        <tr>
+                            <td>{{ passenger.email }}</td>
+                            <td>{{ passenger.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Staff Actions Section -->
+        <div class="section">
+            <h2><i class="fas fa-tasks"></i> Staff Actions</h2>
+            <div class="action-buttons">
+                <form action="/staff_create_flight" method="GET">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Create Flight
+                    </button>
+                </form>
+                <form action="/staff_update_status" method="GET">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> Update Status
+                    </button>
+                </form>
+                <form action="/staff_add_airplane" method="GET">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plane"></i> Add Airplane
+                    </button>
+                </form>
+                <form action="/staff_add_airport" method="GET">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-map-marker-alt"></i> Add Airport
+                    </button>
+                </form>
+                <form action="/staff_grant_permission" method="GET">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-shield"></i> Grant Permission
+                    </button>
+                </form>
+                <form action="/staff_add_agent" method="GET">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-tie"></i> Add Agent
+                    </button>
+                </form>
+                <form action="/staff_reports" method="GET">
+                    <button type="submit" class="btn btn-accent">
+                        <i class="fas fa-chart-bar"></i> Ticket Reports
+                    </button>
+                </form>
+                <form action="/staff_revenue" method="GET">
+                    <button type="submit" class="btn btn-accent">
+                        <i class="fas fa-money-bill-wave"></i> Revenue
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Booking Agents Section -->
+        <div class="section">
+            <h2><i class="fas fa-user-tie"></i> Booking Agents</h2>
+            <form action="/staff_view_agents" method="GET" style="margin-bottom: 1.5rem;">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> View Top Agents
+                </button>
+            </form>
+            
+            {% if agents_month %}
+            <h3>Top 5 Agents (Past 6 Months)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Agent Email</th>
+                            <th>Agent ID</th>
+                            <th>Tickets Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agent in agents_month %}
+                        <tr>
+                            <td>{{ agent.email }}</td>
+                            <td>{{ agent.booking_agent_id }}</td>
+                            <td>{{ agent.ticket_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            
+            {% if agents_year %}
+            <h3>Top 5 Agents (Past Year)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Agent Email</th>
+                            <th>Agent ID</th>
+                            <th>Tickets Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agent in agents_year %}
+                        <tr>
+                            <td>{{ agent.email }}</td>
+                            <td>{{ agent.booking_agent_id }}</td>
+                            <td>{{ agent.ticket_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            
+            {% if agents_commission %}
+            <h3>Top 5 Agents (Past Year, Commission)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Agent Email</th>
+                            <th>Agent ID</th>
+                            <th>Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agent in agents_commission %}
+                        <tr>
+                            <td>{{ agent.email }}</td>
+                            <td>{{ agent.booking_agent_id }}</td>
+                            <td>${{ agent.commission }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Frequent Customer Section -->
+        <div class="section">
+            <h2><i class="fas fa-star"></i> Frequent Customers</h2>
+            <form action="/staff_view_customers" method="GET" style="margin-bottom: 1.5rem;">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> View Frequent Customers
+                </button>
+            </form>
+            
+            {% if frequent_customer %}
+            <h3>Most Frequent Customer (Past Year)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Customer Email</th>
+                            <th>Customer Name</th>
+                            <th>Tickets Purchased</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ frequent_customer.email }}</td>
+                            <td>{{ frequent_customer.name }}</td>
+                            <td>{{ frequent_customer.ticket_count }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if customer_flights %}
+            <h3>Flights Taken on {{ airline_name }}</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>Flight Number</th>
+                            <th>Departure</th>
+                            <th>Departure Time</th>
+                            <th>Arrival</th>
+                            <th>Arrival Time</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flight in customer_flights %}
+                        <tr>
+                            <td>{{ flight.flight_num }}</td>
+                            <td>{{ flight.departure_airport }}</td>
+                            <td>{{ flight.departure_time | datetimeformat('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ flight.arrival_airport }}</td>
+                            <td>{{ flight.arrival_time | datetimeformat('%Y-%m-%d %H:%M') }}</td>
+                            <td>${{ flight.price }}</td>
+                            <td>
+                                <span class="status 
+                                    {% if flight.status == 'On Time' %}on-time
+                                    {% elif flight.status == 'Delayed' %}delayed
+                                    {% elif flight.status == 'Cancelled' %}cancelled
+                                    {% elif flight.status == 'Boarding' %}boarding
+                                    {% endif %}">
+                                    {{ flight.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No flights found for this customer on {{ airline_name }}.</p>
+            {% endif %}
+            {% else %}
+            <p>No frequent customers found for {{ airline_name }} in the past year.</p>
+            {% endif %}
+        </div>
+
+        <!-- Top Destinations Section -->
+        <div class="section">
+            <h2><i class="fas fa-map-marked-alt"></i> Top Destinations</h2>
+            <form action="/staff_top_destinations" method="GET" style="margin-bottom: 1.5rem;">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> View Top Destinations
+                </button>
+            </form>
+            
+            {% if destinations_3months %}
+            <h3>Top 3 Destinations (Past 3 Months)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>City</th>
+                            <th>Tickets Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dest in destinations_3months %}
+                        <tr>
+                            <td>{{ dest.airport_city }}</td>
+                            <td>{{ dest.ticket_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            
+            {% if destinations_year %}
+            <h3>Top 3 Destinations (Past Year)</h3>
+            <div style="overflow-x: auto;">
+                <table class="flight-table">
+                    <thead>
+                        <tr>
+                            <th>City</th>
+                            <th>Tickets Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dest in destinations_year %}
+                        <tr>
+                            <td>{{ dest.airport_city }}</td>
+                            <td>{{ dest.ticket_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Logout -->
+        <a href="/logout" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Log out
+        </a>
+    </div>
+
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Registration | SkyWings Airlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #2ecc71;
+            --secondary: #27ae60;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .registration-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+        
+        .logo {
+            width: 80px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            position: relative;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.3);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        input[type="date"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 1rem;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            margin-top: 1rem;
+        }
+        .error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .error {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        .flight-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fly 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px) translateY(50px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-100px) rotate(5deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .registration-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated flight icons -->
+    <i class="fas fa-plane flight-icon" style="top: 15%; left: 0; animation-delay: 0s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 35%; left: 0; animation-delay: 3s; animation-duration: 20s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 65%; left: 0; animation-delay: 7s; animation-duration: 25s;"></i>
+    
+    <div class="registration-container">
+        <!-- Logo placeholder - replace with your actual logo -->
+        <div class="logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#fff" d="M50 10L20 50L35 50L30 60L50 50L70 60L65 50L80 50L50 10Z"/>
+                <circle cx="50" cy="50" r="10" fill="#2ecc71"/>
+            </svg>
+        </div>
+        
+        <!-- Error and Success Messages -->
+        {% if error %}
+            <div class="message error">
+                <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <div class="message success">
+                <i class="fas fa-check-circle"></i> <strong>Success:</strong> {{ message }}
+            </div>
+        {% endfor %}
+        <h2>Airline Staff Registration</h2>
+        <div class="subtitle">Join our team of aviation professionals</div>
+        
+        <form class="registration-form" action="/registerAuthStaff" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="Create your username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Create a secure password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <i class="fas fa-id-card"></i>
+                <input type="text" name="first_name" placeholder="John" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <i class="fas fa-id-card"></i>
+                <input type="text" name="last_name" placeholder="Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="date_of_birth">Date of Birth</label>
+                <i class="fas fa-birthday-cake"></i>
+                <input type="date" name="date_of_birth" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="airline_name">Airline</label>
+                <i class="fas fa-plane"></i>
+                <input type="text" name="airline_name" placeholder="SkyWings Airlines" required>
+            </div>
+            
+            {% if error %}
+                <div class="error">
+                    <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+                </div>
+            {% endif %}
+            
+            <button type="submit" class="btn">
+                <i class="fas fa-user-shield"></i> Register as Staff
+            </button>
+        </form>
+        
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Information | SkyWings Airlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            position: relative;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .flight-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .flight-table thead {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+        
+        .flight-table th {
+            padding: 1rem;
+            text-align: left;
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .flight-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        
+        .flight-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .flight-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status.on-time {
+            background-color: var(--success);
+        }
+        
+        .status.delayed {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .status.cancelled {
+            background-color: var(--danger);
+        }
+        
+        .status.boarding {
+            background-color: var(--primary);
+        }
+        
+        .error {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success {
+            color: var(--success);
+            background: rgba(46, 204, 113, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--success);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        .flight-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fly 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px) translateY(50px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-100px) rotate(5deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .flight-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated flight icons -->
+    <i class="fas fa-plane flight-icon" style="top: 15%; left: 0; animation-delay: 0s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 35%; left: 0; animation-delay: 3s; animation-duration: 20s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 65%; left: 0; animation-delay: 7s; animation-duration: 25s;"></i>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Public Flight Information</h1>
+            <div class="subtitle">Real-time flight status and schedule information</div>
+        </div>
+
+        <!-- Error Messages -->
+        {% if error %}
+            <div class="error">
+                <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        <!-- Search Flights Card -->
+        <div class="card">
+            <h2><i class="fas fa-search"></i> Search Upcoming Flights</h2>
+            <form class="search-form" action="/public" method="POST">
+                <input type="hidden" name="action" value="search_flights">
+                <div class="form-group">
+                    <label>Source City/Airport</label>
+                    <input type="text" name="source" placeholder="e.g., New York or JFK">
+                </div>
+                <div class="form-group">
+                    <label>Destination City/Airport</label>
+                    <input type="text" name="destination" placeholder="e.g., Los Angeles or LAX">
+                </div>
+                <div class="form-group">
+                    <label>Departure Date</label>
+                    <input type="date" name="departure_date">
+                </div>
+                <div class="form-group">
+                    <label>Flight Number</label>
+                    <input type="text" name="flight_num" placeholder="e.g., 1001">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-plane"></i> Search Flights
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Upcoming Flights Card -->
+        <div class="card">
+            <h2><i class="fas fa-plane-departure"></i> Upcoming Flights</h2>
+            {% if coming_flights %}
+                <div style="overflow-x: auto;">
+                    <table class="flight-table">
+                        <thead>
+                            <tr>
+                                <th>Airline</th>
+                                <th>Flight No.</th>
+                                <th>Departure</th>
+                                <th>Departure Time</th>
+                                <th>Arrival</th>
+                                <th>Arrival Time</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for flight in coming_flights %}
+                            <tr>
+                                <td>{{ flight.airline_name }}</td>
+                                <td>{{ flight.flight_num }}</td>
+                                <td>{{ flight.departure_airport }}</td>
+                                <td>{{ flight.departure_time }}</td>
+                                <td>{{ flight.arrival_airport }}</td>
+                                <td>{{ flight.arrival_time }}</td>
+                                <td>${{ flight.price }}</td>
+                                <td>
+                                    <span class="status 
+                                        {% if flight.status == 'On Time' %}on-time
+                                        {% elif flight.status == 'Delayed' %}delayed
+                                        {% elif flight.status == 'Cancelled' %}cancelled
+                                        {% elif flight.status == 'Boarding' %}boarding
+                                        {% endif %}">
+                                        {{ flight.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="no-data">
+                    <i class="fas fa-plane-slash" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>No upcoming flights found</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</body>
+</html>

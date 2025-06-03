@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Management | SkyWings Airlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            position: relative;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn-large {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .btn-agent {
+            background: linear-gradient(45deg, var(--success), #27ae60);
+            color: white;
+        }
+        
+        .btn-airline {
+            background: linear-gradient(45deg, var(--warning), #d35400);
+            color: white;
+        }
+        
+        .btn-large:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-large i {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .btn-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .error {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success {
+            color: var(--success);
+            background: rgba(46, 204, 113, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--success);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        .flight-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fly 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px) translateY(50px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-100px) rotate(5deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-large {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated flight icons -->
+    <i class="fas fa-plane flight-icon" style="top: 15%; left: 0; animation-delay: 0s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 35%; left: 0; animation-delay: 3s; animation-duration: 20s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 65%; left: 0; animation-delay: 7s; animation-duration: 25s;"></i>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Agent Management</h1>
+            <div class="subtitle">Register booking agents and manage airline affiliations</div>
+        </div>
+
+        <!-- Error and Success Messages -->
+        {% if error %}
+            <div class="message error">
+                <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <div class="message success">
+                <i class="fas fa-check-circle"></i> <strong>Success:</strong> {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- Action Buttons Card -->
+        <div class="card">
+            <h2><i class="fas fa-user-tie"></i> Agent Actions</h2>
+            <div class="btn-container">
+                <button class="btn-large btn-agent" onclick="window.location.href='/registerforBookingagentsecond'">
+                    <div class="btn-content">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register New Booking Agent</span>
+                    </div>
+                </button>
+                
+                <button class="btn-large btn-airline" onclick="window.location.href='/add_for_agent_airline'">
+                    <div class="btn-content">
+                        <i class="fas fa-plane"></i>
+                        <span>Add Airline for Agent</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</body>
+</html>

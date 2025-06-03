@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration | SkyWings Airlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .registration-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--card-border);
+        }
+        
+        .logo {
+            width: 80px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .registration-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        input[type="date"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .error {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--danger);
+            grid-column: 1 / -1;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        .error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        .flight-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fly 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px) translateY(50px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-100px) rotate(5deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .registration-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .registration-form {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated flight icons -->
+    <i class="fas fa-plane flight-icon" style="top: 15%; left: 0; animation-delay: 0s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 35%; left: 0; animation-delay: 3s; animation-duration: 20s;"></i>
+    <i class="fas fa-plane flight-icon" style="top: 65%; left: 0; animation-delay: 7s; animation-duration: 25s;"></i>
+    
+    <div class="registration-container">
+        <!-- Logo placeholder - replace with your actual logo -->
+        <div class="logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#fff" d="M50 10L20 50L35 50L30 60L50 50L70 60L65 50L80 50L50 10Z"/>
+                <circle cx="50" cy="50" r="10" fill="#3498db"/>
+            </svg>
+        </div>
+        
+        <!-- Error and Success Messages -->
+        {% if error %}
+            <div class="message error">
+                <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <div class="message success">
+                <i class="fas fa-check-circle"></i> <strong>Success:</strong> {{ message }}
+            </div>
+        {% endfor %}
+
+        <h1>Customer Registration</h1>
+        <div class="subtitle">Join SkyWings Airlines and start your journey with us</div>
+        
+        <form class="registration-form" action="/registerAuthCustomer" method="POST">
+            <!-- Account Information -->
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" name="email" placeholder="your@email.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" placeholder="Create a password" required>
+            </div>
+            
+            <!-- Personal Information -->
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" name="name" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="date_of_birth"><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                <input type="date" name="date_of_birth" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number"><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="text" name="phone_number" placeholder="+1 (123) 456-7890">
+            </div>
+            
+            <!-- Address Information -->
+            <div class="form-group">
+                <label for="building_number"><i class="fas fa-home"></i> Building Number</label>
+                <input type="text" name="building_number" placeholder="123">
+            </div>
+            
+            <div class="form-group">
+                <label for="street"><i class="fas fa-road"></i> Street</label>
+                <input type="text" name="street" placeholder="Main Street">
+            </div>
+            
+            <div class="form-group">
+                <label for="city"><i class="fas fa-city"></i> City</label>
+                <input type="text" name="city" placeholder="New York">
+            </div>
+            
+            <div class="form-group">
+                <label for="state"><i class="fas fa-map-marker-alt"></i> State/Province</label>
+                <input type="text" name="state" placeholder="NY">
+            </div>
+            
+            <!-- Passport Information -->
+            <div class="form-group">
+                <label for="passport_number"><i class="fas fa-passport"></i> Passport Number</label>
+                <input type="text" name="passport_number" placeholder="A12345678">
+            </div>
+            
+            <div class="form-group">
+                <label for="passport_expiration"><i class="fas fa-calendar-times"></i> Passport Expiration</label>
+                <input type="date" name="passport_expiration">
+            </div>
+            
+            <div class="form-group">
+                <label for="passport_country"><i class="fas fa-globe"></i> Passport Country</label>
+                <input type="text" name="passport_country" placeholder="United States">
+            </div>
+            
+
+            
+            <button type="submit" class="btn" style="grid-column: 1 / -1;">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+        
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</body>
+</html>

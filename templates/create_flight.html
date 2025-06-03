@@ -1,0 +1,192 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><html>
+<head>
+    <title>Create New Flight</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Tailwind Config and Fonts -->
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Ensure table cells wrap long text */
+        td, th {
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Create New Flight</h1>
+        <p class="text-gray-600 mb-6">This page allows staff with admin permission to create a new flight for {{ session.airline_name }}.</p>
+
+        <!-- Error and Success Messages -->
+        {% if error %}
+            <p class="text-red-600 bg-red-100 border border-red-400 rounded-md p-3 mb-4"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <p class="text-green-600 bg-green-100 border border-green-400 rounded-md p-3 mb-4"><strong>Success:</strong> {{ message }}</p>
+        {% endfor %}
+
+        <!-- Existing Flights Table -->
+        <h2 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Existing Flights</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white rounded-md shadow-sm">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 border-b">Flight Number</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 border-b">Departure Time</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 border-b">Arrival Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flight in flights %}
+                    <tr class="{% if loop.index0 % 2 == 0 %}bg-gray-50{% else %}bg-white{% endif %} hover:bg-gray-100">
+                        <td class="px-4 py-2 border-b text-gray-800">{{ flight.flight_num }}</td>
+                        <td class="px-4 py-2 border-b text-gray-800">{{ flight.departure_time | datetimeformat('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td class="px-4 py-2 border-b text-gray-800">{{ flight.arrival_time | datetimeformat('%Y-%m-%d %H:%M:%S') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Form to Create Flight -->
+        <form action="/staff_create_flight" method="POST" class="space-y-4 mt-8">
+            <div>
+                <label for="flight_num" class="block text-sm font-medium text-gray-700">Flight Number</label>
+                <input type="text" id="flight_num" name="flight_num" required
+                       class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Format: YYYY-MM-DD HH:MM:SS (e.g., 2025-05-10 14:30:00)</p>
+                <label for="departure_time" class="block text-sm font-medium text-gray-700 mt-2">Departure Time</label>
+                <input type="text" id="departure_time" name="departure_time" required
+                       class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="arrival_time" class="block text-sm font-medium text-gray-700">Arrival Time</label>
+                <input type="text" id="arrival_time" name="arrival_time" required
+                       class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required
+                       class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Status</label>
+                <div class="mt-2 space-y-2">
+                    <div>
+                        <input type="radio" id="on-time" name="status" value="on-time" required
+                               class="mr-2 focus:ring-blue-500">
+                        <label for="on-time" class="text-gray-700">On-Time</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="delayed" name="status" value="delayed" required
+                               class="mr-2 focus:ring-blue-500">
+                        <label for="delayed" class="text-gray-700">Delayed</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="in-progress" name="status" value="in-progress" required
+                               class="mr-2 focus:ring-blue-500">
+                        <label for="in-progress" class="text-gray-700">In-Progress</label>
+                    </div>
+                </div>
+            </div>
+{#
+            <div>
+                <label for="airplane_id" class="block text-sm font-medium text-gray-700">Airplane ID</label>
+                <input type="text" id="airplane_id" name="airplane_id" required
+                       class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Airplane ID</label>
+                <div class="mt-2 space-y-2">
+                    {% for airplane in airplanes %}
+                    <div>
+                        <input type="radio" id="airplane_id" name="airplane_id" value="{{ airplane.airplane_id }}" required
+                               class="mr-2 focus:ring-blue-500">
+                        <label for="depart_{{ airplane.airplane_id }}" class="text-gray-700">{{ airplane.airplane_id }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Departure Airport</label>
+                <div class="mt-2 space-y-2">
+                    {% for airport in airports %}
+                    <div>
+                        <input type="radio" id="depart_{{ airport.airport_name }}" name="departure_airport" value="{{ airport.airport_name }}" required
+                               class="mr-2 focus:ring-blue-500">
+                        <label for="depart_{{ airport.airport_name }}" class="text-gray-700">{{ airport.airport_name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Arrival Airport</label>
+                <div class="mt-2 space-y-2">
+                    {% for airport in airports %}
+                    <div>
+                        <input type="radio" id="arrive_{{ airport.airport_name }}" name="arrival_airport" value="{{ airport.airport_name }}" required
+                               class="mr-2 focus:ring-blue-500">
+                        <label for="arrive_{{ airport.airport_name }}" class="text-gray-700">{{ airport.airport_name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                Add Flight
+            </button>
+        </form>
+
+        <!-- Back to Dashboard -->
+        <a href="/home_AirlineStaff" class="mt-6 inline-block text-blue-600 hover:text-blue-800 hover:underline">
+            Back to Dashboard
+        </a>
+    </div>
+</body>
+</html>
